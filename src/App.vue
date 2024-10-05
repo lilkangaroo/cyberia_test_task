@@ -1,30 +1,51 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view />
+  <div class="app">
+    <TheHeader />
+    <TheBreadcrumbs />
+    <ProjectList :projects="projects" />
+    <FeedbackForm />
+    <TheFooter />
+  </div>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import axios from "axios";
 
-nav {
-  padding: 30px;
-}
+import TheHeader from "@/components/TheHeader.vue";
+import TheBreadcrumbs from "@/components/TheBreadcrumbs.vue";
+import ProjectList from "./components/ProjectList.vue";
+import FeedbackForm from "@/components/FeedbackForm.vue";
+import TheFooter from "@/components/TheFooter.vue";
 
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
+export default {
+  components: {
+    TheHeader,
+    TheBreadcrumbs,
+    ProjectList,
+    FeedbackForm,
+    TheFooter,
+  },
+  data() {
+    return {
+      projects: [],
+    };
+  },
+  methods: {
+    async fetchProjects() {
+      try {
+        const response = await axios.get(
+          "https://api.test.cyberia.studio/api/v1/projects"
+        );
+        this.projects = response.data.items;
+      } catch (e) {
+        alert("Ошибка загрузки проектов");
+      }
+    },
+  },
+  mounted() {
+    this.fetchProjects();
+  },
+};
+</script>
 
-nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+<style></style>
