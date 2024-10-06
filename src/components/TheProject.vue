@@ -10,8 +10,8 @@
 export default {
   props: {
     project: {
-      type: Array,
-      Required: true,
+      type: Object,
+      required: true,
     },
   },
 };

@@ -1,11 +1,11 @@
 <template>
   <section>
     <h1>Кейсы</h1>
-    <ProjectCategories />
+    <ProjectCategories @selectedCategory="selectCategory" />
     <TheProject
       class="project"
-      v-for="project in projects"
-      :key="project"
+      v-for="project in filterProjects"
+      :key="project.id"
       :project="project"
     />
   </section>
@@ -20,7 +20,30 @@ export default {
   props: {
     projects: {
       type: Array,
-      Required: true,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      selectedCategoryID: null,
+    };
+  },
+  methods: {
+    selectCategory(categoryID) {
+      this.selectedCategoryID = categoryID;
+    },
+  },
+  computed: {
+    filterProjects() {
+      if (this.selectedCategoryID == null) {
+        return this.projects;
+      } else {
+        return this.projects.filter((project) =>
+          project.categories.some(
+            (category) => category.id === this.selectedCategoryID
+          )
+        );
+      }
     },
   },
 };

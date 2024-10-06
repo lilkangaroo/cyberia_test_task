@@ -1,6 +1,10 @@
 <template>
-  <div class="project_cat" v-for="item in project_categories" :key="item">
-    <button v-for="category in item" :key="category">
+  <div class="project_cat">
+    <button
+      v-for="category in project_categories"
+      :key="category.id"
+      @click="selectCategory(category.id)"
+    >
       {{ category.name }}
     </button>
   </div>
@@ -15,12 +19,15 @@ export default {
     };
   },
   methods: {
+    selectCategory(categoryID) {
+      this.$emit("selectedCategory", categoryID);
+    },
     async fetchCategories() {
       try {
         const response = await axios.get(
           "https://api.test.cyberia.studio/api/v1/project-categories"
         );
-        this.project_categories = response.data;
+        this.project_categories = response.data.items;
       } catch (e) {
         alert("Ошибка загрузки категорий проекта");
       }
